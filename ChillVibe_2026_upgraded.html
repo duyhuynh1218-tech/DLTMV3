@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChillVibe 2026 - Ăn Gì, Chơi Gì, Hát Gì?</title>
+    <!-- CHILL VIBE UPGRADE v2: additive features, existing UI/logic preserved -->
+    <!-- Import Google Fonts modern -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #060814 100%);
+            --accent-pink: #ff2a85;
+            --accent-cyan: #00f2fe;
+            --accent-purple: #7b2cbf;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-card: rgba(20, 20, 35, 0.65);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            /* CSGO Rarity Colors */
+            --csgo-common: #b0c3d9;
+            --csgo-rare: #4b69ff;
+            --csgo-mythic: #d32ce6;
+            --csgo-legendary: #eb4b4b;
+            --csgo-gold: #ffd700;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 15px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dynamic background glow ORBS */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+        }
+
+        body::before {
+            width: 320px;
+            height: 320px;
+            background: var(--accent-pink);
+            top: -50px;
+            left: -50px;
+            opacity: 0.35;
+        }
+
+        body::after {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-cyan);
+            bottom: -50px;
+            right: -50px;
+            opacity: 0.25;
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff2a85, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Badge Danh hiệu */
+        .user-title-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #0f0c20;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        /* Lịch sử số lần quay */
+        .spin-counter-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Glassmorphism Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 6px;
+            border-radius: 99px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 22px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(255, 42, 133, 0.4);
+        }
+
+        /* Glass Content Card */
+        .card {
+            background: var(--glass-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+        }
+
+        /* Budget Filter & Vegetarian Toggle */
+        .budget-filter {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .budget-btn {
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-sub);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .budget-btn.active, .budget-btn:hover {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .veg-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .veg-toggle-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #10b981;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* --- CS:GO / CS2 CASE OPENING ROULETTE STYLES --- */
+        .roulette-wrapper {
+            position: relative;
+            width: 100%;
+            height: 125px;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 16px;
+            border: 2px solid var(--glass-border);
+            overflow: hidden;
+            margin: 15px 0 20px 0;
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+        }
+
+        .roulette-pointer {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--accent-cyan);
+            z-index: 10;
+            box-shadow: 0 0 10px var(--accent-cyan), 0 0 20px var(--accent-cyan);
+            transition: all 0.3s;
+        }
+
+        .roulette-pointer.glow {
+            background: #ffd700;
+            box-shadow: 0 0 15px #ffd700, 0 0 30px #ffd700;
+        }
+
+        .roulette-pointer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 13px solid var(--accent-cyan);
+        }
+
+        .roulette-pointer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-bottom: 13px solid var(--accent-cyan);
+        }
+
+        .roulette-track {
+            display: flex;
+            position: absolute;
+            top: 12px;
+            left: 0;
+            height: 100px;
+            will-change: transform;
+        }
+
+        .roulette-item {
+            width: 130px;
+            height: 100px;
+            margin: 0 5px;
+            background: rgba(20, 20, 30, 0.85);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            flex-shrink: 0;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* CSGO Rarity Lower Accent Bar & Backgrounds */
+        .roulette-item.common {
+            border-bottom: 5px solid var(--csgo-common);
+            background: linear-gradient(180deg, rgba(176, 195, 217, 0.05) 0%, rgba(176, 195, 217, 0.15) 100%);
+        }
+        .roulette-item.rare {
+            border-bottom: 5px solid var(--csgo-rare);
+            background: linear-gradient(180deg, rgba(75, 105, 255, 0.05) 0%, rgba(75, 105, 255, 0.2) 100%);
+        }
+        .roulette-item.mythic {
+            border-bottom: 5px solid var(--csgo-mythic);
+            background: linear-gradient(180deg, rgba(211, 44, 230, 0.08) 0%, rgba(211, 44, 230, 0.25) 100%);
+        }
+        .roulette-item.legendary {
+            border-bottom: 5px solid var(--csgo-legendary);
+            background: linear-gradient(180deg, rgba(235, 75, 75, 0.1) 0%, rgba(235, 75, 75, 0.3) 100%);
+        }
+
+        .roulette-item .item-icon {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+        }
+
+        .roulette-item .item-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+            word-break: break-word;
+        }
+
+        .roulette-item .item-price {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #10b981;
+            margin-top: 2px;
+        }
+
+        .roulette-item .item-sub {
+            font-size: 0.65rem;
+            color: var(--text-sub);
+            margin-top: 1px;
+        }
+
+        /* Kết quả hiển thị bên dưới */
+        .result-box {
+            min-height: 105px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            margin-bottom: 20px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .result-price-tag {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #10b981;
+            margin-bottom: 6px;
+        }
+
+        .result-desc {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
+
+        .difficulty-rating {
+            font-size: 1.1rem;
+            color: #ffd166;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        /* Action Link Buttons */
+        .action-links {
+            display: none;
+            gap: 10px;
+            margin-top: 12px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .action-links.active {
+            display: flex;
+        }
+
+        .btn-link {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 120px;
+        }
+
+        .btn-link:active {
+            transform: scale(0.96);
+        }
+
+        .btn-maps { background: #3b82f6; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3); }
+        .btn-grab { background: #00b14f; box-shadow: 0 4px 14px rgba(0, 177, 79, 0.3); }
+        .btn-youtube { background: #ef4444; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3); }
+
+        /* Main CTA Button */
+        .btn-random {
+            background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(255, 42, 133, 0.35);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-random:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+
+        .btn-random:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 42, 133, 0.5);
+        }
+
+        /* AI Mini Chatbot Styles & Nickname Bar */
+        .nickname-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 8px 14px;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .nickname-box label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            white-space: nowrap;
+        }
+
+        .nickname-input-group {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .nickname-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .btn-save-nick {
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-save-nick:hover { opacity: 0.9; }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .chat-box {
+            height: 240px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            max-width: 88%;
+            word-wrap: break-word;
+            white-space: pre-line;
+        }
+
+        .chat-msg.user {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-msg.ai {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-send {
+            background: var(--accent-cyan);
+            color: #0f0c20;
+            border: none;
+            padding: 0 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-send:hover { opacity: 0.9; }
+
+        /* Section Bộ sưu tập chiến tích */
+        .trophy-section {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .trophy-header {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-clear-history {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .trophy-list {
+            max-height: 130px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .trophy-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--accent-pink);
+        }
+
+        .trophy-item .time {
+            color: var(--text-sub);
+            font-size: 0.7rem;
+        }
+    
+/* ===================== CHILL VIBE UPGRADE ===================== */
+.upgrade-nav {
+    width: 100%;
+    max-width: 480px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 0 auto 20px;
+}
+.upgrade-nav button, .upgrade-mini-btn {
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,.055);
+    color: var(--text-main);
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: .25s ease;
+}
+.upgrade-nav button:hover, .upgrade-mini-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 18px rgba(0,242,254,.18);
+}
+.upgrade-panel {
+    display:none;
+    width:100%;
+    max-width:480px;
+    background:var(--glass-card);
+    border:1px solid var(--glass-border);
+    border-radius:24px;
+    padding:25px;
+    margin-bottom:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+    backdrop-filter:blur(20px);
+}
+.upgrade-panel.active { display:block; animation:fadeIn .35s ease-out; }
+.upgrade-panel h2 { margin-bottom:6px; }
+.upgrade-sub { color:var(--text-sub); font-size:.82rem; margin-bottom:16px; }
+.upgrade-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.upgrade-grid.three { grid-template-columns:repeat(3,1fr); }
+.cv-input, .cv-select, .cv-textarea {
+    width:100%;
+    background:rgba(0,0,0,.28);
+    border:1px solid var(--glass-border);
+    color:#fff;
+    border-radius:11px;
+    padding:11px 12px;
+    outline:none;
+    margin-bottom:9px;
+}
+.cv-textarea { min-height:90px; resize:vertical; }
+.cv-input:focus, .cv-select:focus, .cv-textarea:focus { border-color:var(--accent-cyan); }
+.cv-select option { background:#17142b; color:#fff; }
+.cv-label { display:block; font-size:.76rem; color:var(--text-sub); font-weight:800; margin:4px 0 5px; text-align:left; }
+.cv-btn {
+    border:0;
+    border-radius:11px;
+    padding:11px 14px;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));
+    font-weight:800;
+    cursor:pointer;
+    width:100%;
+    transition:.2s;
+}
+.cv-btn.secondary { background:rgba(255,255,255,.08); border:1px solid var(--glass-border); }
+.cv-btn.cyan { background:linear-gradient(135deg,#00bcd4,#0066ff); }
+.cv-btn.green { background:linear-gradient(135deg,#10b981,#047857); }
+.cv-btn:hover { transform:translateY(-2px); }
+.cv-list { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0; }
+.cv-chip {
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--glass-border);
+    font-size:.75rem;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.cv-chip button { border:0; background:transparent; color:#ff6b9d; cursor:pointer; }
+.cv-result {
+    margin-top:14px;
+    padding:16px;
+    border:1px dashed rgba(255,255,255,.22);
+    border-radius:16px;
+    background:rgba(255,255,255,.035);
+    text-align:center;
+}
+.cv-big-result { font-size:1.45rem; font-weight:900; color:var(--accent-cyan); }
+.cv-muted { color:var(--text-sub); font-size:.78rem; line-height:1.5; }
+.cv-table { width:100%; border-collapse:collapse; font-size:.78rem; margin:10px 0; }
+.cv-table th,.cv-table td { border-bottom:1px solid rgba(255,255,255,.08); padding:8px 5px; text-align:left; }
+.cv-table th { color:var(--accent-cyan); }
+.weather-card {
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:12px;
+    align-items:center;
+    padding:14px;
+    border-radius:16px;
+    background:linear-gradient(135deg,rgba(0,242,254,.08),rgba(255,42,133,.08));
+    border:1px solid var(--glass-border);
+    margin-bottom:12px;
+}
+.weather-icon { font-size:2.4rem; }
+.vibe-meter { height:10px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin:10px 0; }
+.vibe-meter span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--accent-cyan),var(--accent-pink)); transition:1s; }
+.quiz-option {
+    display:block;
+    text-align:left;
+    padding:11px;
+    margin:7px 0;
+    border:1px solid var(--glass-border);
+    border-radius:12px;
+    background:rgba(255,255,255,.045);
+    cursor:pointer;
+}
+.quiz-option:hover { border-color:var(--accent-cyan); }
+.quiz-option input { margin-right:8px; }
+.achievement-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.achievement-card {
+    padding:12px;
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    background:rgba(255,255,255,.04);
+    text-align:left;
+}
+.achievement-card.locked { opacity:.45; filter:grayscale(.7); }
+.achievement-card.unlocked { box-shadow:0 0 18px rgba(255,215,0,.12); border-color:rgba(255,215,0,.35); }
+.achievement-icon { font-size:1.5rem; }
+.achievement-name { font-weight:900; font-size:.78rem; margin:4px 0; }
+.achievement-desc { font-size:.68rem; color:var(--text-sub); line-height:1.35; }
+.memory-preview {
+    padding:18px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#15102a,#24134b);
+    border:1px solid rgba(255,255,255,.15);
+    text-align:left;
+    margin-top:12px;
+}
+.memory-preview h3 { color:var(--accent-cyan); margin-bottom:8px; }
+.rank-item {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px;
+    margin:7px 0;
+    border-radius:12px;
+    background:rgba(255,255,255,.045);
+}
+.rank-left { display:flex; align-items:center; gap:8px; text-align:left; }
+.rank-number { width:25px; font-weight:900; color:var(--accent-pink); }
+.sound-toggle {
+    position:fixed;
+    right:14px;
+    bottom:14px;
+    z-index:50;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:1px solid var(--glass-border);
+    background:rgba(15,12,32,.8);
+    color:#fff;
+    cursor:pointer;
+    backdrop-filter:blur(12px);
+}
+.confetti-piece {
+    position:fixed;
+    width:9px;
+    height:15px;
+    top:-20px;
+    z-index:100;
+    pointer-events:none;
+    animation:confettiFall 1.8s linear forwards;
+}
+@keyframes confettiFall {
+    to { transform:translate3d(var(--dx),110vh,0) rotate(720deg); opacity:0; }
+}
+.loot-popup {
+    position:fixed;
+    inset:0;
+    z-index:90;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(7px);
+}
+.loot-popup.active { display:flex; }
+.loot-box {
+    width:min(90%,380px);
+    padding:30px;
+    border-radius:24px;
+    text-align:center;
+    background:linear-gradient(145deg,#17132e,#090a16);
+    border:2px solid rgba(255,215,0,.45);
+    box-shadow:0 0 60px rgba(255,215,0,.22);
+    animation:lootPop .45s cubic-bezier(.2,1.4,.3,1);
+}
+@keyframes lootPop {
+    from { transform:scale(.65) rotate(-4deg); opacity:0; }
+    to { transform:scale(1) rotate(0); opacity:1; }
+}
+.loot-rarity { font-size:.8rem; letter-spacing:2px; font-weight:900; margin-bottom:8px; }
+.loot-title { font-size:1.55rem; font-weight:900; color:#fff; margin-bottom:8px; }
+.holiday-snow {
+    position:fixed;
+    top:-20px;
+    z-index:1;
+    pointer-events:none;
+    animation:snowFall linear infinite;
+}
+@keyframes snowFall { to { transform:translateY(110vh) rotate(360deg); } }
+.holiday-banner {
+    display:none;
+    width:100%;
+    max-width:480px;
+    padding:10px 14px;
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    margin-bottom:14px;
+    text-align:center;
+    background:rgba(255,255,255,.06);
+    font-size:.8rem;
+    font-weight:800;
+}
+@media(max-width:430px) {
+    .upgrade-grid, .achievement-grid { grid-template-columns:1fr; }
+    .upgrade-grid.three { grid-template-columns:1fr 1fr; }
+    .upgrade-nav { grid-template-columns:1fr 1fr; }
+}
+
+    </style>
+</head>
+<body>
+
+    <h1 class="header-title">CHILL VIBE 2026 ✨</h1>
+
+    <!-- Badge Danh hiệu hiển thị ngay sảnh -->
+    <div class="user-title-badge" id="user-title-display">
+        🏅 Danh hiệu: Tân Thủ Nhập Môn 🐣
+    </div>
+
+    <!-- Đếm Lịch Sử Lần Quay -->
+    <div class="spin-counter-badge" id="spin-counter">
+        Các ní đã quay 0 lần 🎉
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'food')">🍲 Ăn Gì?</button>
+        <button class="tab-btn" onclick="switchTab(event, 'game')">🎮 Trò Chơi</button>
+        <button class="tab-btn" onclick="switchTab(event, 'karaoke')">🎤 Karaoke</button>
+        <button class="tab-btn" onclick="switchTab(event, 'ai-bot')">🤖 Trợ Lý AI</button>
+    </div>
+
+    <!-- Tab 1: Random Món Ăn -->
+    <div id="food" class="card active">
+        <h2>Hôm Nay Ăn Gì? 🍜</h2>
+        <p class="card-subtitle">Chọn ngân sách & Quay hòm CS:GO chọn món ăn</p>
+
+        <!-- Dynamic Budget Filter -->
+        <div class="budget-filter">
+            <button class="budget-btn active" onclick="filterFoodByBudget('all', this)">Tất Cả</button>
+            <button class="budget-btn" onclick="filterFoodByBudget(50000, this)">≤ 50.000đ</button>
+            <button class="budget-btn" onclick="filterFoodByBudget(100000, this)">50k - 100k</button>
+            <button class="budget-btn" onclick="filterFoodByBudget(200000, this)">100k - 200k</button>
+        </div>
+
+        <!-- Bật/Tắt Chế Độ Ăn Chay -->
+        <div class="veg-toggle-container">
+            <span class="veg-toggle-label">🌱 Chế độ Món Chay:</span>
+            <label class="switch">
+                <input type="checkbox" id="veg-checkbox" onchange="toggleVegetarian()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="roulette-wrapper">
+            <div class="roulette-pointer" id="food-pointer"></div>
+            <div id="food-track" class="roulette-track"></div>
+        </div>
+
+        <div class="result-box" id="food-result-box">
+            <div id="food-result" class="result-title">Sẵn sàng mở hòm!</div>
+            <div id="food-price" class="result-price-tag"></div>
+            <div id="food-actions" class="action-links">
+                <a id="maps-url" href="#" target="_blank" class="btn-link btn-maps">📍 Google Maps</a>
+                <a id="grab-url" href="#" target="_blank" class="btn-link btn-grab">🛵 GrabFood</a>
+            </div>
+        </div>
+
+        <button id="btn-spin-food" class="btn-random" onclick="spinCSGORoulette('food')">⚡ MỞ HÒM MÓN ĂN</button>
+    </div>
+
+    <!-- Tab 2: Random Trò Chơi Nhóm -->
+    <div id="game" class="card">
+        <h2>Trò Chơi Nhóm 🎲</h2>
+        <p class="card-subtitle">Spin trò chơi quẩy cùng đồng đội</p>
+        
+        <div class="roulette-wrapper">
+            <div class="roulette-pointer" id="game-pointer"></div>
+            <div id="game-track" class="roulette-track"></div>
+        </div>
+
+        <div class="result-box">
+            <div id="game-result" class="result-title">Sẵn sàng mở hòm!</div>
+            <div id="game-desc" class="result-desc"></div>
+        </div>
+
+        <button id="btn-spin-game" class="btn-random" onclick="spinCSGORoulette('game')">⚡ MỞ HÒM GAME</button>
+    </div>
+
+    <!-- Tab 3: Random Bài Hát Karaoke -->
+    <div id="karaoke" class="card">
+        <h2>Karaoke Vibe 🎤</h2>
+        <p class="card-subtitle">Spin bài hát & Đánh giá độ khó</p>
+        
+        <div class="roulette-wrapper">
+            <div class="roulette-pointer" id="karaoke-pointer"></div>
+            <div id="karaoke-track" class="roulette-track"></div>
+        </div>
+
+        <div class="result-box">
+            <div id="karaoke-result" class="result-title">Sẵn sàng mở hòm!</div>
+            <div id="karaoke-desc" class="result-desc"></div>
+            <div id="karaoke-difficulty" class="difficulty-rating"></div>
+            <div id="karaoke-actions" class="action-links">
+                <a id="youtube-url" href="#" target="_blank" class="btn-link btn-youtube">📺 Mở YouTube Beat</a>
+            </div>
+        </div>
+
+        <button id="btn-spin-karaoke" class="btn-random" onclick="spinCSGORoulette('karaoke')">⚡ MỞ HÒM KARAOKE</button>
+    </div>
+
+    <!-- Tab 4: AI Mini Chatbot -->
+    <div id="ai-bot" class="card">
+        <h2>Trợ Lý Cuộc Vui 🤖</h2>
+        <p class="card-subtitle">Trò chuyện cực keo & Lập plan chill theo tâm trạng</p>
+
+        <!-- Khung đặt biệt danh -->
+        <div class="nickname-box">
+            <label for="nickname-input">👤 Biệt danh:</label>
+            <div class="nickname-input-group">
+                <input type="text" id="nickname-input" class="nickname-input" placeholder="Nhập biệt danh..." value="Ní">
+                <button class="btn-save-nick" onclick="saveNickname()">Lưu</button>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div id="chat-history" class="chat-box">
+                <div class="chat-msg ai" id="ai-welcome-msg">
+                    Chợt nhận ra hôm nay chưa biết đi đâu chơi đúng không? Cứ tâm sự thoải mái nhé, tui chuẩn bị sẵn plan xịn cho bạn rồi nè! 🔥
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="user-input" class="chat-input" placeholder="Tâm sự hoặc nhập yêu cầu..." onkeypress="handleKeyPress(event)">
+                <button class="btn-send" onclick="sendAiMessage()">GỬI</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="holiday-banner" id="holiday-banner"></div>
+
+    <div class="upgrade-nav" aria-label="Chill Vibe tiện ích">
+        <button onclick="openUpgradePanel('vibe')">🧠 Vibe Check</button>
+        <button onclick="openUpgradePanel('wheel')">🎡 Custom Wheel</button>
+        <button onclick="openUpgradePanel('bill')">💸 Split Bill</button>
+        <button onclick="openUpgradePanel('weather')">🌤 Weather Vibe</button>
+        <button onclick="openUpgradePanel('achievements')">🏆 Thành tích</button>
+        <button onclick="openUpgradePanel('memory')">📸 Kỷ niệm</button>
+        <button onclick="openUpgradePanel('community')">🔥 BXH Chill Vibe</button>
+        <button onclick="openUpgradePanel('settings')">⚙️ Cài đặt</button>
+    </div>
+
+    <section id="upgrade-vibe" class="upgrade-panel">
+        <h2>🧠 Vibe Check</h2>
+        <p class="upgrade-sub">3 câu hỏi nhanh để tạo Vibe Score và ưu tiên gợi ý phù hợp.</p>
+        <div id="mood-quiz"></div>
+        <button class="cv-btn" onclick="calculateVibe()">✨ CHECK VIBE</button>
+        <div id="vibe-result" class="cv-result" style="display:none;"></div>
+    </section>
+
+    <section id="upgrade-wheel" class="upgrade-panel">
+        <h2>🎡 Custom Wheel</h2>
+        <p class="upgrade-sub">Tạo vòng quay riêng cho nhóm: món ăn, game, karaoke hoặc người chịu nhiệm vụ.</p>
+        <div class="upgrade-grid">
+            <select id="custom-wheel-type" class="cv-select">
+                <option value="food">🍜 Món ăn</option>
+                <option value="game">🎮 Game</option>
+                <option value="song">🎤 Bài hát</option>
+                <option value="person">👤 Thành viên</option>
+            </select>
+            <input id="custom-wheel-input" class="cv-input" placeholder="Nhập một lựa chọn...">
+        </div>
+        <button class="cv-btn secondary" onclick="addCustomWheelItem()">＋ Thêm lựa chọn</button>
+        <div id="custom-wheel-list" class="cv-list"></div>
+        <div class="upgrade-grid">
+            <button class="cv-btn" onclick="spinCustomWheel()">⚡ QUAY CUSTOM</button>
+            <button class="cv-btn secondary" onclick="clearCustomWheel()">🗑 Xóa vòng</button>
+        </div>
+        <div id="custom-wheel-result" class="cv-result">
+            <div class="cv-big-result">Sẵn sàng quay!</div>
+        </div>
+    </section>
+
+    <section id="upgrade-bill" class="upgrade-panel">
+        <h2>💸 Split Bill</h2>
+        <p class="upgrade-sub">Chia hóa đơn nhanh, hỗ trợ chia đều hoặc nhập số tiền từng người.</p>
+        <label class="cv-label">Tổng hóa đơn (VNĐ)</label>
+        <input id="bill-total" class="cv-input" type="number" min="0" placeholder="Ví dụ: 500000">
+        <label class="cv-label">Số người</label>
+        <input id="bill-people" class="cv-input" type="number" min="1" value="4">
+        <label class="cv-label">Tiền tip (VNĐ)</label>
+        <input id="bill-tip" class="cv-input" type="number" min="0" value="0">
+        <label class="cv-label">Phí dịch vụ (VNĐ)</label>
+        <input id="bill-service" class="cv-input" type="number" min="0" value="0">
+        <div class="upgrade-grid">
+            <button class="cv-btn" onclick="splitBillEqual()">⚖️ Chia đều</button>
+            <button class="cv-btn cyan" onclick="prepareBillQR()">📱 Tạo VietQR</button>
+        </div>
+        <div id="bill-result" class="cv-result"></div>
+        <div id="qr-area" class="cv-result" style="display:none;">
+            <p class="cv-muted">Nhập thông tin nhận tiền để tạo QR. Không lưu thông tin ngân hàng nếu bạn không bấm lưu.</p>
+            <input id="qr-bank" class="cv-input" placeholder="Mã ngân hàng, ví dụ: MBBank">
+            <input id="qr-account" class="cv-input" placeholder="Số tài khoản">
+            <input id="qr-name" class="cv-input" placeholder="Tên chủ tài khoản">
+            <input id="qr-note" class="cv-input" placeholder="Nội dung chuyển khoản" value="CHILLVIBE BILL">
+            <button class="cv-btn cyan" onclick="generateVietQR()">TẠO QR CHUYỂN KHOẢN</button>
+            <div id="qr-output" style="margin-top:12px;"></div>
+        </div>
+    </section>
+
+    <section id="upgrade-weather" class="upgrade-panel">
+        <h2>🌤 Weather Vibe</h2>
+        <p class="upgrade-sub">Sử dụng thời tiết hiện tại để gợi ý hoạt động và món ăn. Không cần API key.</p>
+        <button class="cv-btn cyan" onclick="loadWeather()">📍 KIỂM TRA THỜI TIẾT</button>
+        <div id="weather-result" class="cv-result" style="margin-top:12px;">
+            <div class="cv-muted">Bấm nút để lấy thời tiết hiện tại.</div>
+        </div>
+    </section>
+
+    <section id="upgrade-achievements" class="upgrade-panel">
+        <h2>🏆 Achievement Unlocked</h2>
+        <p class="upgrade-sub">Chiến tích được tính từ lịch sử Chill Vibe và lưu trên trình duyệt.</p>
+        <div id="achievement-grid" class="achievement-grid"></div>
+    </section>
+
+    <section id="upgrade-memory" class="upgrade-panel">
+        <h2>📸 Hòm Quá Khứ</h2>
+        <p class="upgrade-sub">Lưu lại một buổi đi chơi và tạo Digital Memory Card ngay trên trình duyệt.</p>
+        <input id="memory-title" class="cv-input" placeholder="Tên buổi đi chơi">
+        <input id="memory-date" class="cv-input" type="date">
+        <input id="memory-place" class="cv-input" placeholder="Địa điểm">
+        <input id="memory-members" class="cv-input" placeholder="Thành viên, ví dụ: Duy, Nhi, Tú">
+        <input id="memory-food" class="cv-input" placeholder="Món ăn">
+        <input id="memory-song" class="cv-input" placeholder="Bài hát">
+        <textarea id="memory-note" class="cv-textarea" placeholder="Một câu chuyện đáng nhớ..."></textarea>
+        <div class="upgrade-grid">
+            <button class="cv-btn" onclick="saveMemory()">💾 Lưu kỷ niệm</button>
+            <button class="cv-btn cyan" onclick="renderMemoryCard()">🪄 Tạo Card</button>
+        </div>
+        <div id="memory-list" class="cv-list"></div>
+        <div id="memory-preview" class="memory-preview" style="display:none;"></div>
+    </section>
+
+    <section id="upgrade-community" class="upgrade-panel">
+        <h2>🔥 BXH Chill Vibe</h2>
+        <p class="upgrade-sub">BXH client-side dựa trên số lần được quay trúng và lượt thích trên thiết bị này.</p>
+        <input id="community-name" class="cv-input" placeholder="Tên món / game / bài hát">
+        <select id="community-category" class="cv-select">
+            <option value="food">🍜 Món ăn</option>
+            <option value="game">🎮 Game</option>
+            <option value="song">🎤 Bài hát</option>
+        </select>
+        <button class="cv-btn" onclick="addCommunityItem()">＋ Đề xuất</button>
+        <div id="community-ranking" style="margin-top:12px;"></div>
+    </section>
+
+    <section id="upgrade-settings" class="upgrade-panel">
+        <h2>⚙️ Cài đặt Chill Vibe</h2>
+        <p class="upgrade-sub">Tùy chỉnh trải nghiệm mà không ảnh hưởng dữ liệu cũ.</p>
+        <div class="upgrade-grid">
+            <button class="cv-btn secondary" onclick="toggleSound()">🔊 Bật/Tắt âm thanh</button>
+            <button class="cv-btn secondary" onclick="toggleHolidayTheme()">🎉 Theme lễ hội</button>
+        </div>
+        <button class="cv-btn secondary" style="margin-top:10px" onclick="exportChillData()">📦 Xuất dữ liệu JSON</button>
+    </section>
+
+    <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()" title="Bật/Tắt âm thanh">🔊</button>
+
+    <div class="loot-popup" id="loot-popup" onclick="closeLootPopup(event)">
+        <div class="loot-box">
+            <div id="loot-rarity" class="loot-rarity">LEGENDARY</div>
+            <div id="loot-icon" style="font-size:3rem;margin:8px">🎉</div>
+            <div id="loot-title" class="loot-title">Kết quả</div>
+            <div id="loot-desc" class="cv-muted">Bạn đã mở hòm thành công!</div>
+            <button class="cv-btn" style="margin-top:18px" onclick="closeLootPopup()">🔥 CHILL TIẾP</button>
+        </div>
+    </div>
+
+    <!-- Bộ Sưu Tập Chiến Tích -->
+    <div class="trophy-section">
+        <div class="trophy-header">
+            <span>🏆 Bộ Sưu Tập Chiến Tích</span>
+            <button class="btn-clear-history" onclick="clearHistory()">Xóa lịch sử</button>
+        </div>
+        <div class="trophy-list" id="trophy-list-box">
+            <!-- Lịch sử sẽ tự động render vào đây -->
+        </div>
+    </div>
+
+    <script>
+        // --- DANH SÁCH DỮ LIỆU ---
+        const foods = [
+            // Món Mặn
+            { name: "Bánh Mì Thịt Nướng", price: 25000, rarity: "common", query: "Bánh mì thịt nướng", icon: "🥖", isVeg: false },
+            { name: "Bánh Tráng Nướng", price: 25000, rarity: "common", query: "Bánh tráng nướng", icon: "🍕", isVeg: false },
+            { name: "Súp Cua Bóc Vỏ", price: 30000, rarity: "common", query: "Súp cua", icon: "🥣", isVeg: false },
+            { name: "Cơm Tấm Chả Trứng", price: 35000, rarity: "common", query: "Cơm tấm", icon: "🍛", isVeg: false },
+            { name: "Cơm Gà Xối Mỡ", price: 40000, rarity: "common", query: "Cơm gà xối mỡ", icon: "🍗", isVeg: false },
+            { name: "Bún Thịt Nướng", price: 40000, rarity: "common", query: "Bún thịt nướng", icon: "🥗", isVeg: false },
+            { name: "Bánh Cuốn Nóng", price: 35000, rarity: "common", query: "Bánh cuốn", icon: "🥟", isVeg: false },
+            { name: "Gỏi Cuốn Tôm Thịt", price: 35000, rarity: "common", query: "Gỏi cuốn", icon: "🌯", isVeg: false },
+            { name: "Bánh Mì Doner Kebab", price: 35000, rarity: "common", query: "Bánh mì Doner Kebab", icon: "🥙", isVeg: false },
+            
+            { name: "Phở Bò Tái Lăn", price: 55000, rarity: "rare", query: "Phở bò", icon: "🍜", isVeg: false },
+            { name: "Bún Bò Huế Chả Cua", price: 55000, rarity: "rare", query: "Bún bò Huế", icon: "🍲", isVeg: false },
+            { name: "Bún Đậu Mắm Tôm", price: 60000, rarity: "rare", query: "Bún đậu mắm tôm", icon: "🧆", isVeg: false },
+            { name: "Mì Quảng Tôm Thịt", price: 50000, rarity: "rare", query: "Mì Quảng", icon: "🍜", isVeg: false },
+            { name: "Hủ Tiếu Nam Vang", price: 50000, rarity: "rare", query: "Hủ tiếu Nam Vang", icon: "🍜", isVeg: false },
+            { name: "Bún Chả Hà Nội", price: 55000, rarity: "rare", query: "Bún chả", icon: "🥗", isVeg: false },
+            { name: "Bánh Canh Cua", price: 60000, rarity: "rare", query: "Bánh canh cua", icon: "🍲", isVeg: false },
+            { name: "Bún Riêu Cua Đồng", price: 50000, rarity: "rare", query: "Bún riêu cua", icon: "🍲", isVeg: false },
+            { name: "Mì Cay Hàn Quốc", price: 55000, rarity: "rare", query: "Mì cay Hàn Quốc", icon: "🌶️", isVeg: false },
+            { name: "Bánh Xèo Miền Tây", price: 60000, rarity: "rare", query: "Bánh xèo", icon: "🌮", isVeg: false },
+            { name: "Bò Né Trứng Ốp La", price: 65000, rarity: "rare", query: "Bò né", icon: "🍳", isVeg: false },
+            { name: "Cơm Chiên Dương Châu", price: 50000, rarity: "rare", query: "Cơm chiên Dương Châu", icon: "🍚", isVeg: false },
+            { name: "Mì Vịt Tiềm", price: 85000, rarity: "rare", query: "Mì vịt tiềm", icon: "🍜", isVeg: false },
+            { name: "Bún Mắm Miền Tây", price: 65000, rarity: "rare", query: "Bún mắm", icon: "🍲", isVeg: false },
+
+            { name: "Gà Rán Sốt Cay", price: 120000, rarity: "mythic", query: "Gà rán", icon: "🍗", isVeg: false },
+            { name: "Lẩu Thái Hải Sản", price: 180000, rarity: "mythic", query: "Lẩu Thái", icon: "🥘", isVeg: false },
+            { name: "Lẩu Bò Nhúng Dấm", price: 190000, rarity: "mythic", query: "Lẩu bò", icon: "🍲", isVeg: false },
+            { name: "Ốc Sài Gòn Bơ Tỏi", price: 150000, rarity: "mythic", query: "Ốc Sài Gòn", icon: "🐚", isVeg: false },
+            { name: "Pizza Bò Xốt BBQ", price: 170000, rarity: "mythic", query: "Pizza", icon: "🍕", isVeg: false },
+            { name: "Lẩu Tokbokki", price: 139000, rarity: "mythic", query: "Lẩu Tokbokki", icon: "🍢", isVeg: false },
+
+            { name: "Lẩu Nướng BBQ Premium", price: 250000, rarity: "legendary", query: "Lẩu nướng BBQ", icon: "🥩", isVeg: false },
+            { name: "Sushi & Sashimi Nhật", price: 300000, rarity: "legendary", query: "Sushi", icon: "🍣", isVeg: false },
+            { name: "Lẩu Băng Chuyền", price: 299000, rarity: "legendary", query: "Lẩu băng chuyền", icon: "🍲", isVeg: false },
+
+            // Món Chay
+            { name: "Cơm Tấm Chay", price: 30000, rarity: "common", query: "Cơm tấm chay", icon: "🌱", isVeg: true },
+            { name: "Bún Nghệ Chay", price: 30000, rarity: "common", query: "Bún nghệ chay", icon: "🥗", isVeg: true },
+            { name: "Hủ Tiếu Chay Nam Bộ", price: 35000, rarity: "common", query: "Hủ tiếu chay", icon: "🍜", isVeg: true },
+            { name: "Bánh Mì Nấm Chay", price: 20000, rarity: "common", query: "Bánh mì chay", icon: "🥖", isVeg: true },
+            { name: "Gỏi Cuốn Chay", price: 25000, rarity: "common", query: "Gỏi cuốn chay", icon: "🌯", isVeg: true },
+            
+            { name: "Phở Chay Thanh Tịnh", price: 45000, rarity: "rare", query: "Phở chay", icon: "🍜", isVeg: true },
+            { name: "Bún Huế Chay", price: 45000, rarity: "rare", query: "Bún Huế chay", icon: "🍲", isVeg: true },
+            { name: "Bánh Xèo Chay Giòn", price: 50000, rarity: "rare", query: "Bánh xèo chay", icon: "🌮", isVeg: true },
+            { name: "Trà Sữa Full Topping", price: 45000, rarity: "rare", query: "Trà sữa", icon: "🧋", isVeg: true },
+
+            { name: "Lẩu Nấm Chay Thiên Nhiên", price: 150000, rarity: "mythic", query: "Lẩu nấm chay", icon: "🍄", isVeg: true },
+            { name: "Lẩu Thái Chay Spicy", price: 160000, rarity: "mythic", query: "Lẩu Thái chay", icon: "🥘", isVeg: true },
+
+            { name: "Buffet Chay Cao Cấp", price: 220000, rarity: "legendary", query: "Buffet chay", icon: "🍱", isVeg: true }
+        ];
+
+        const games = [
+            { name: "Thật Hay Thách", rarity: "common", desc: "1 người nói 3 câu về bản thân (có 1 câu nói dối). Cả nhóm soi ra câu xạo!", icon: "🎭" },
+            { name: "Tam Sao Thất Bản", rarity: "rare", desc: "Đeo tai nghe bật nhạc cực to, đọc khẩu hình miệng đoán từ.", icon: "🎧" },
+            { name: "Đếm Số 3-6-9", rarity: "common", desc: "Đếm từ 1. Số chứa hoặc chia hết 3,6,9 phải vỗ tay. Ai sai ăn phạt!", icon: "👏" },
+            { name: "Ai Là Gián Điệp?", rarity: "mythic", desc: "Gián điệp nhận từ khác nhóm. Lần lượt miêu tả để vạch mặt kẻ giả mạo.", icon: "🕵️" },
+            { name: "Nhìn Vào Mắt Nhau", rarity: "common", desc: "Nhìn chằm chằm mắt nhau 1 phút. Ai cười hoặc chớp mắt trước là thua.", icon: "👀" },
+            { name: "Nối Từ Tốc Độ", rarity: "rare", desc: "3 giây cho mỗi lượt nối từ. Chậm hoặc trùng từ là chấp nhận hình phạt!", icon: "⚡" },
+            { name: "Nói Thật Hay Phạt", rarity: "legendary", desc: "Quay chai chọn người. Trả Lời Thật hoặc bao trà sữa cho cả bàn!", icon: "🍾" }
+        ];
+
+        const songs = [
+            { name: "Anh Nhà Ở Đâu Thế?", artist: "AMEE", stars: 1, rarity: "common", icon: "🎵" },
+            { name: "Ngày Mai Chuyện Cũ Sẽ Bỏ Qua", artist: "Trúc Nhân", stars: 2, rarity: "common", icon: "🎶" },
+            { name: "Cắt Đôi Nỗi Sầu", artist: "Tăng Duy Tân", stars: 2, rarity: "common", icon: "🎤" },
+            { name: "See Tình", artist: "Hoàng Thùy Linh", stars: 1, rarity: "common", icon: "💃" },
+            { name: "Thích Em Hơi Nhiều", artist: "Wren Evans", stars: 2, rarity: "rare", icon: "💖" },
+            { name: "Nơi Này Có Anh", artist: "Sơn Tùng M-TP", stars: 3, rarity: "rare", icon: "🌟" },
+            { name: "Vì Mẹ Anh Chia Tay", artist: "Miu Lê x Karik", stars: 3, rarity: "rare", icon: "💔" },
+            { name: "Hết Thương Cạn Nhớ", artist: "Đức Phúc", stars: 3, rarity: "rare", icon: "🌧️" },
+            { name: "Có Không Giữ Mất Đừng Tìm", artist: "Trúc Nhân", stars: 3, rarity: "rare", icon: "🔥" },
+            { name: "Bên Trên Tầng Lầu", artist: "Tăng Duy Tân", stars: 3, rarity: "rare", icon: "🌃" },
+            { name: "Lạc Trôi", artist: "Sơn Tùng M-TP", stars: 4, rarity: "mythic", icon: "🐉" },
+            { name: "Em Của Ngày Hôm Qua", artist: "Sơn Tùng M-TP", stars: 4, rarity: "mythic", icon: "⚡" },
+            { name: "Chạy Ngay Đi", artist: "Sơn Tùng M-TP", stars: 4, rarity: "mythic", icon: "🔥" },
+            { name: "Waiting For You", artist: "MONO", stars: 4, rarity: "mythic", icon: "🕺" },
+            { name: "Sóng Gió", artist: "Jack & K-ICM", stars: 5, rarity: "legendary", icon: "🌊" },
+            { name: "Nước Mắt Cá Sấu", artist: "HIEUTHUHAI", stars: 5, rarity: "legendary", icon: "👑" },
+            { name: "Bật Tình Yêu Lên", artist: "Hòa Minzy x Tăng Duy Tân", stars: 5, rarity: "legendary", icon: "❤️" }
+        ];
+
+        // --- KHỞI TẠO BIẾN TOÀN CỤC ---
+        let currentActiveFoodList = [];
+        let isSpinning = { food: false, game: false, karaoke: false };
+        let totalSpins = 0;
+        let selectedBudget = 'all';
+        let userNickname = "Ní";
+
+        // Khởi chạy khi DOM load xong
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedNick = localStorage.getItem('chillvibe_user_nickname');
+            if (savedNick) {
+                userNickname = savedNick;
+                document.getElementById('nickname-input').value = savedNick;
+            }
+            updateAiWelcomeMessage();
+            applyFoodFilter(); 
+            initTrack('game', games, item => ({ title: item.name, price: '', sub: "Trò chơi", rarity: item.rarity, icon: item.icon }));
+            initTrack('karaoke', songs, item => ({ title: item.name, price: '', sub: item.artist, rarity: item.rarity, icon: item.icon }));
+            
+            renderHistoryAndTitles();
+        });
+
+        // --- HÀM XỬ LÝ CHUYỂN TAB & BIỆT DANH ---
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function saveNickname() {
+            const inputVal = document.getElementById('nickname-input').value.trim();
+            if (inputVal) {
+                userNickname = inputVal;
+                localStorage.setItem('chillvibe_user_nickname', userNickname);
+                updateAiWelcomeMessage();
+                alert(`Đã đổi biệt danh thành "${userNickname}" thành công! 🎉`);
+            }
+        }
+
+        function updateAiWelcomeMessage() {
+            const welcomeMsg = document.getElementById('ai-welcome-msg');
+            if (welcomeMsg) {
+                welcomeMsg.innerText = `Chào ${userNickname} nè! Chợt nhận ra hôm nay chưa biết đi đâu chơi đúng không? Cứ tâm sự thoải mái nhé, tui chuẩn bị sẵn plan xịn cho ${userNickname} rồi nè! 🔥`;
+            }
+        }
+
+        // --- FILTER MÓN ĂN ---
+        function applyFoodFilter() {
+            const isVegOnly = document.getElementById('veg-checkbox').checked;
+            currentActiveFoodList = foods.filter(f => {
+                if (isVegOnly && !f.isVeg) return false;
+                if (!isVegOnly && f.isVeg) return false;
+                if (selectedBudget === 'all') return true;
+                if (selectedBudget === 50000) return f.price <= 50000;
+                if (selectedBudget === 100000) return f.price > 50000 && f.price <= 100000;
+                if (selectedBudget === 200000) return f.price > 100000 && f.price <= 200000;
+                return true;
+            });
+
+            if (currentActiveFoodList.length === 0) {
+                currentActiveFoodList = foods.filter(f => f.isVeg === isVegOnly);
+            }
+
+            initTrack('food', currentActiveFoodList, item => ({
+                title: item.name,
+                price: item.price.toLocaleString('vi-VN') + 'đ',
+                sub: item.isVeg ? "🌱 Chay" : "Món mặn",
+                rarity: item.rarity,
+                icon: item.icon
+            }));
+        }
+
+        function filterFoodByBudget(budget, btn) {
+            selectedBudget = budget;
+            document.querySelectorAll('.budget-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyFoodFilter();
+        }
+
+        function toggleVegetarian() {
+            applyFoodFilter();
+        }
+
+        // --- ROULETTE LOGIC ---
+        function initTrack(type, list, mapFn) {
+            const track = document.getElementById(`${type}-track`);
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0px)';
+            track.innerHTML = '';
+            
+            let extendedList = [];
+            for (let i = 0; i < 12; i++) {
+                extendedList = extendedList.concat(list);
+            }
+
+            extendedList.forEach(item => {
+                const data = mapFn(item);
+                const el = document.createElement('div');
+                el.className = `roulette-item ${data.rarity}`;
+                el.innerHTML = `
+                    <div class="item-icon">${data.icon}</div>
+                    <div class="item-title">${data.title}</div>
+                    ${data.price ? `<div class="item-price">${data.price}</div>` : ''}
+                    <div class="item-sub">${data.sub}</div>
+                `;
+                track.appendChild(el);
+            });
+        }
+
+        function spinCSGORoulette(type) {
+            if (isSpinning[type]) return;
+
+            let list = [];
+            if (type === 'food') list = currentActiveFoodList;
+            if (type === 'game') list = games;
+            if (type === 'karaoke') list = songs;
+
+            if (!list || list.length === 0) return;
+
+            const track = document.getElementById(`${type}-track`);
+            const btn = document.getElementById(`btn-spin-${type}`);
+            const pointer = document.getElementById(`${type}-pointer`);
+            const wrapper = track ? track.closest('.roulette-wrapper') : null;
+
+            if (!track || !btn || !pointer || !wrapper) return;
+
+            isSpinning[type] = true;
+            btn.disabled = true;
+            pointer.classList.remove('glow');
+
+            /*
+             * QUAN TRỌNG:
+             * Chọn winner đúng theo index của danh sách đang hiển thị.
+             * Không dùng randomInnerOffset vì nó có thể làm kim lệch sang ô khác.
+             */
+            const winningIndex = Math.floor(Math.random() * list.length);
+            const winner = list[winningIndex];
+
+            /*
+             * Mỗi ô có width 130px + margin trái/phải 5px = 140px.
+             * Tuy nhiên vẫn đo trực tiếp DOM để tránh lỗi nếu CSS thay đổi.
+             */
+            const firstItem = track.querySelector('.roulette-item');
+            const itemWidth = firstItem ? firstItem.getBoundingClientRect().width : 130;
+            const itemStyle = firstItem ? window.getComputedStyle(firstItem) : null;
+            const marginLeft = itemStyle ? parseFloat(itemStyle.marginLeft) || 0 : 5;
+            const marginRight = itemStyle ? parseFloat(itemStyle.marginRight) || 0 : 5;
+            const itemStep = itemWidth + marginLeft + marginRight;
+
+            const wrapperWidth = wrapper.clientWidth;
+
+            /*
+             * Dùng bản thứ 8 trong track 12 bản.
+             * Ô winner sẽ nằm chính xác giữa kim.
+             */
+            const targetSetIndex = 8;
+            const absoluteWinningIndex =
+                (targetSetIndex * list.length) + winningIndex;
+
+            const itemCenterOffset =
+                (wrapperWidth / 2) - (itemWidth / 2) - marginLeft;
+
+            const targetTranslateX =
+                -(absoluteWinningIndex * itemStep - itemCenterOffset);
+
+            /*
+             * RESET vị trí trước mỗi lần quay.
+             * Đây là phần sửa lỗi lần 2, 3... chỉ nhích nhẹ.
+             */
+            track.style.transition = 'none';
+            track.style.transform = 'translate3d(0, 0, 0)';
+
+            /* Ép browser render lại vị trí 0 trước khi bắt đầu animation. */
+            void track.offsetWidth;
+
+            /* Bắt đầu quay lại từ đầu với animation đầy đủ. */
+            track.style.transition =
+                'transform 5.5s cubic-bezier(0.12, 0.8, 0.18, 1)';
+            track.style.transform =
+                `translate3d(${targetTranslateX}px, 0, 0)`;
+
+            let finished = false;
+
+            const finishSpin = function () {
+                if (finished) return;
+                finished = true;
+
+                track.removeEventListener('transitionend', transitionHandler);
+
+                isSpinning[type] = false;
+                btn.disabled = false;
+                pointer.classList.add('glow');
+
+                saveRecordToHistory(type, winner);
+                displayResult(type, winner);
+            };
+
+            const transitionHandler = function (e) {
+                if (e.propertyName !== 'transform') return;
+                finishSpin();
+            };
+
+            track.addEventListener('transitionend', transitionHandler);
+
+            /* Fallback để nút không bị khóa nếu transitionend không chạy. */
+            setTimeout(finishSpin, 5700);
+        }
+
+        // --- HIỂN THỊ KẾT QUẢ & FIX LỖI TÌM KIẾM GRABFOOD ---
+        function displayResult(type, item) {
+            if (type === 'food') {
+                document.getElementById('food-result').innerText = `${item.icon} ${item.name}`;
+                document.getElementById('food-price').innerText = `Giá đề xuất: ${item.price.toLocaleString('vi-VN')}đ`;
+                
+                const actions = document.getElementById('food-actions');
+                actions.classList.add('active');
+                
+                // Mã hóa chuẩn hóa câu truy vấn tìm kiếm
+                const queryEncoded = encodeURIComponent(item.query || item.name);
+                
+                // Google Maps URL
+                document.getElementById('maps-url').href = `https://www.google.com/maps/search/${queryEncoded}`;
+                
+                // FIXED GRABFOOD SEARCH URL: Tự động điền món vừa quay trúng vào ô tìm kiếm GrabFood
+                document.getElementById('grab-url').href = `https://food.grab.com/vn/vi/restaurants?search=${queryEncoded}`;
+            } else if (type === 'game') {
+                document.getElementById('game-result').innerText = `${item.icon} ${item.name}`;
+                document.getElementById('game-desc').innerText = item.desc;
+            } else if (type === 'karaoke') {
+                document.getElementById('karaoke-result').innerText = `${item.icon} ${item.name}`;
+                document.getElementById('karaoke-desc').innerText = `Ca sĩ: ${item.artist}`;
+                document.getElementById('karaoke-difficulty').innerText = `Độ khó: ${'⭐'.repeat(item.stars)}`;
+                
+                const actions = document.getElementById('karaoke-actions');
+                actions.classList.add('active');
+                
+                const queryEncoded = encodeURIComponent(`${item.name} ${item.artist} karaoke beat`);
+                document.getElementById('youtube-url').href = `https://www.youtube.com/results?search_query=${queryEncoded}`;
+            }
+        }
+
+        // --- LOCALSTORAGE & HIỂN THỊ DANH HIỆU / LỊCH SỬ ---
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('chillvibe_history') || '[]');
+        }
+
+        function saveRecordToHistory(type, item) {
+            const history = getHistory();
+            const newRecord = {
+                type: type,
+                name: item.name,
+                price: item.price || 0,
+                isVeg: type === 'food' ? (item.isVeg || false) : false,
+                timestamp: new Date().getTime(),
+                timeString: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+            };
+            history.unshift(newRecord);
+            localStorage.setItem('chillvibe_history', JSON.stringify(history));
+            renderHistoryAndTitles();
+        }
+
+        function clearHistory() {
+            if (confirm("Ní có chắc muốn xóa hết lịch sử và reset danh hiệu không?")) {
+                localStorage.removeItem('chillvibe_history');
+                renderHistoryAndTitles();
+            }
+        }
+
+        function calculateUserTitle(history) {
+            if (history.length === 0) return "Tân Thủ Nhập Môn 🐣";
+            const nowHour = new Date().getHours();
+            
+            const karaokeSpins = history.filter(h => h.type === 'karaoke').length;
+            const vegSpins = history.filter(h => h.type === 'food' && h.isVeg).length;
+            const totalFoodBill = history
+                .filter(h => h.type === 'food')
+                .reduce((sum, h) => sum + (h.price || 0), 0);
+
+            if (nowHour >= 23 || nowHour < 4) return "Khách Ruột Chợ Rẫy 🦇";
+            if (nowHour >= 8 && nowHour <= 11) return "Dũng Sĩ Ăn Dặm 🥣";
+            if (totalFoodBill >= 2000000) return "Cậu Cả Trong Gia Phả 💎";
+
+            const foodSpins = history.filter(h => h.type === 'food').length;
+            if (foodSpins >= 3 && totalFoodBill < 1000000) return "Dân Chơi Hệ Thiếu Ngân Sách 💸";
+            if (vegSpins >= 2) return "Thích Tích Phước 🥗";
+            if (karaokeSpins >= 5) return "Thánh Ca Karaoke 🎤";
+            if (history.length >= 10) return "Tay Quay Sát Thủ ⚡";
+
+            return "Dân Chill Chính Hiệu ✨";
+        }
+
+        function renderHistoryAndTitles() {
+            const history = getHistory();
+            
+            // Cập nhật Danh hiệu
+            const title = calculateUserTitle(history);
+            document.getElementById('user-title-display').innerText = `🏅 Danh hiệu: ${title}`;
+            
+            // Cập nhật Số lần quay
+            totalSpins = history.length;
+            document.getElementById('spin-counter').innerText = `Các ní đã quay ${totalSpins} lần 🎉`;
+
+            // Render danh sách chiến tích
+            const trophyBox = document.getElementById('trophy-list-box');
+            if (history.length === 0) {
+                trophyBox.innerHTML = `<div style="text-align:center; color: var(--text-sub); font-size: 0.8rem; padding: 10px;">Chưa có chiến tích nào. Quay ngay thôi ní ơi!</div>`;
+                return;
+            }
+
+            trophyBox.innerHTML = history.map(item => {
+                let tag = '';
+                if (item.type === 'food') tag = `🍲 ${item.name} (${item.price.toLocaleString('vi-VN')}đ)`;
+                else if (item.type === 'game') tag = `🎲 ${item.name}`;
+                else if (item.type === 'karaoke') tag = `🎤 ${item.name}`;
+
+                return `
+                    <div class="trophy-item">
+                        <span>${tag}</span>
+                        <span class="time">${item.timeString}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- TRỢ LÝ AI MINI ---
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendAiMessage();
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatHistory = document.getElementById('chat-history');
+
+            // Tạo tin nhắn User
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-msg user';
+            userMsg.innerText = text;
+            chatHistory.appendChild(userMsg);
+
+            input.value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Phản hồi AI
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'chat-msg ai';
+                aiMsg.innerText = generateSmartAiResponse(text);
+                chatHistory.appendChild(aiMsg);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }, 500);
+        }
+
+        function generateSmartAiResponse(input) {
+            const lower = input.toLowerCase();
+            const nick = userNickname || "ní";
+
+            if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi ') || lower === 'hi') {
+                return `Trời ơi chào ${nick} iu dấu! 👋 Hôm nay thế nào rồi? Có đang chán hay thèm đi quẩy đâu không nói tui nghe coi!`;
+            }
+            if (lower.includes('ai đó') || lower.includes('bạn là ai') || lower.includes('tên gì')) {
+                return `Tui là Trợ Lý ChillVibe nè ${nick}! Chuyên gia giải cứu những buổi hẹn hò chán ngắt và là đứa bạn thân luôn sẵn sàng nghe tâm sự đó! 😎`;
+            }
+            if (lower.includes('chán') || lower.includes('buồn') || lower.includes('mệt') || lower.includes('stress') || lower.includes('áp lực')) {
+                return `Thương ${nick} quá nè 🥹 Bị sao thế nói tui nghe coi? Hay là làm ly Trà Sữa full topping 🧋 rồi cùng mở bài "Cắt Đôi Nỗi Sầu" gào thét một trận cho bớt mệt mỏi nha?`;
+            }
+            if (lower.includes('vui') || lower.includes('sướng') || lower.includes('quẩy') || lower.includes('đã')) {
+                return `Năng lượng này mãi đỉnh nha ${nick}! 🎉 Thừa thắng xông lên, rủ ngay hội cạ cứng làm bữa Lẩu Thái Hải Sản rồi chiến game "Ai Là Gián Điệp" tới bến luôn đi!`;
+            }
+            if (lower.includes('chay')) {
+                return `🌱 Gu ăn chay keo lỳ nha ${nick}! Tui gợi ý nè:\n• Ăn nhẹ: Bún Huế Chay hoặc Phở Chay thanh tịnh.\n• Tụ tập đông: Làm nồi Lẩu Nấm Chay Thiên Nhiên ấm cúng 🍄.\nĂn xong quay sang tab Karaoke làm vài bài chill chill là chuẩn bài!`;
+            }
+            if (lower.includes('rẻ') || lower.includes('sinh viên') || lower.includes('ít tiền') || lower.includes('50k')) {
+                return `Sống tiết kiệm nhưng vibe vẫn phải xịn nha ${nick}! 💸\n1. Làm ngay đĩa Cơm Tấm Chả Trứng hoặc Bánh Mì Thịt Nướng (tầm 25k - 35k).\n2. Ghé công viên uống trà đá 10k.\n3. Lôi bài "Đếm Số 3-6-9" ra phạt đứa nào thua bao nước. Mượt luôn!`;
+            }
+            if (lower.includes('nhậu') || lower.includes('bia') || lower.includes('lai rai')) {
+                return `Kèo này chảy nước miếng nha ${nick}! 🍻\nGợi ý Plan nhậu cực cháy:\n• Món bén: Ốc Sài Gòn Bơ Tỏi 🐚 hoặc Lẩu Bò Nhúng Dấm.\n• Game quẩy bàn nhậu: "Nói Thật Hay Phạt" (ai xạo lừa phạt 1 ly).\n• Kết bài: Đoạn cuối kéo nhau đi hát bài "Sóng Gió"!`;
+            }
+
+            const generalResponses = [
+                `Nghe hợp lý đó ${nick}! Nếu chưa biết chốt sao thì thử sang Tab "Ăn Gì" hoặc "Trò Chơi" bấm nút Mở Hòm CS:GO thử vận may xem sao nha! ✨`,
+                `Ý này đỉnh nè ${nick}! Tui duyệt luôn. Mà đi một mình hay đi chung với hội cạ cứng vậy? Để tui xếp trò chơi quẩy cùng nữa! 🎲`,
+                `Ui vibe này đúng chuẩn ChillVibe 2026 luôn ${nick} ơi! Rủ thêm đồng đội đi cùng cho xôm nhé! 🔥`
+            ];
+            return generalResponses[Math.floor(Math.random() * generalResponses.length)];
+        }
+
+        /* ===================== CHILL VIBE UPGRADE JS ===================== */
+        const CV_KEYS = {
+            custom: 'chillvibe_custom_wheel_v2',
+            achievements: 'chillvibe_achievements_v2',
+            memories: 'chillvibe_memories_v2',
+            community: 'chillvibe_community_v2',
+            sound: 'chillvibe_sound_enabled_v2',
+            vibe: 'chillvibe_vibe_v2'
+        };
+
+        const cvRead = (key, fallback) => {
+            try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+            catch(e) { return fallback; }
+        };
+        const cvWrite = (key, value) => {
+            try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+            catch(e) { console.warn('ChillVibe storage error:', e); return false; }
+        };
+
+        let cvSoundOn = localStorage.getItem(CV_KEYS.sound) !== 'false';
+        let cvAudioCtx = null;
+
+        function cvBeep(freq=440, duration=.08, type='square', volume=.035) {
+            if (!cvSoundOn) return;
+            try {
+                cvAudioCtx = cvAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                if (cvAudioCtx.state === 'suspended') cvAudioCtx.resume();
+                const osc = cvAudioCtx.createOscillator();
+                const gain = cvAudioCtx.createGain();
+                osc.type = type; osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, cvAudioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(.0001, cvAudioCtx.currentTime + duration);
+                osc.connect(gain); gain.connect(cvAudioCtx.destination);
+                osc.start(); osc.stop(cvAudioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+        function cvSpinSound() {
+            if (!cvSoundOn) return;
+            let n=0;
+            const timer=setInterval(()=>{
+                cvBeep(250+n*20,.055,'square',.025); n++;
+                if(n>18) clearInterval(timer);
+            }, 95);
+        }
+        function cvWinSound() {
+            [523,659,784,1046].forEach((f,i)=>setTimeout(()=>cvBeep(f,.14,'sine',.055),i*95));
+        }
+        function toggleSound() {
+            cvSoundOn = !cvSoundOn;
+            localStorage.setItem(CV_KEYS.sound, cvSoundOn);
+            document.getElementById('sound-toggle').textContent = cvSoundOn ? '🔊' : '🔇';
+            if (cvSoundOn) cvBeep(880,.12,'sine',.04);
+        }
+
+        function openUpgradePanel(id) {
+            document.querySelectorAll('.upgrade-panel').forEach(p=>p.classList.remove('active'));
+            const p=document.getElementById('upgrade-'+id);
+            if(p) p.classList.add('active');
+            if(id==='vibe') renderMoodQuiz();
+            if(id==='wheel') renderCustomWheel();
+            if(id==='achievements') renderAchievements();
+            if(id==='memory') renderMemories();
+            if(id==='community') renderCommunity();
+            if(id==='weather') {}
+            window.scrollTo({top:document.querySelector('.upgrade-nav').offsetTop-15,behavior:'smooth'});
+        }
+
+        /* --- CUSTOM WHEEL --- */
+        const defaultCustom = {
+            food: ['Phở Bò','Cơm Tấm','Bánh Mì','Lẩu Thái','Trà Sữa'],
+            game: ['Thật Hay Thách','Nối Từ','Ai Là Gián Điệp?','Đếm Số 3-6-9'],
+            song: ['See Tình','Sóng Gió','Lạc Trôi','Waiting For You'],
+            person: ['Người 1','Người 2','Người 3','Người 4']
+        };
+        function getCustomData() {
+            const saved=cvRead(CV_KEYS.custom,null);
+            return saved && typeof saved==='object' ? saved : defaultCustom;
+        }
+        function addCustomWheelItem() {
+            const type=document.getElementById('custom-wheel-type').value;
+            const input=document.getElementById('custom-wheel-input');
+            const value=input.value.trim();
+            if(!value) return;
+            const data=getCustomData();
+            data[type]=data[type]||[];
+            data[type].push(value);
+            cvWrite(CV_KEYS.custom,data);
+            input.value='';
+            renderCustomWheel();
+        }
+        function renderCustomWheel() {
+            const type=document.getElementById('custom-wheel-type').value;
+            const data=getCustomData();
+            const list=document.getElementById('custom-wheel-list');
+            list.innerHTML=(data[type]||[]).map((x,i)=>`
+                <span class="cv-chip">${escapeHTML(x)}
+                <button onclick="removeCustomWheelItem(${i})">×</button></span>`).join('');
+        }
+        function removeCustomWheelItem(index) {
+            const type=document.getElementById('custom-wheel-type').value;
+            const data=getCustomData();
+            data[type].splice(index,1); cvWrite(CV_KEYS.custom,data); renderCustomWheel();
+        }
+        function clearCustomWheel() {
+            const type=document.getElementById('custom-wheel-type').value;
+            const data=getCustomData(); data[type]=[]; cvWrite(CV_KEYS.custom,data); renderCustomWheel();
+        }
+        function spinCustomWheel() {
+            const type=document.getElementById('custom-wheel-type').value;
+            const list=(getCustomData()[type]||[]).filter(Boolean);
+            const out=document.getElementById('custom-wheel-result');
+            if(!list.length) { out.innerHTML='<div class="cv-muted">Chưa có lựa chọn nào.</div>'; return; }
+            cvSpinSound();
+            let cycles=0;
+            const timer=setInterval(()=>{
+                out.innerHTML=`<div class="cv-big-result">🎡 ${escapeHTML(list[Math.floor(Math.random()*list.length)])}</div>`;
+                cycles++;
+                if(cycles>=15){
+                    clearInterval(timer);
+                    const winner=list[Math.floor(Math.random()*list.length)];
+                    out.innerHTML=`<div class="cv-big-result">🎉 ${escapeHTML(winner)}</div><div class="cv-muted">Custom Wheel đã chọn ngẫu nhiên.</div>`;
+                    cvWinSound(); launchConfetti(45);
+                    saveGenericHistory('custom-'+type,winner);
+                    checkAchievements();
+                }
+            },100);
+        }
+
+        /* --- SPLIT BILL + QR --- */
+        let lastBillTotal=0;
+        function money(v){ return Number(v||0).toLocaleString('vi-VN')+'đ'; }
+        function splitBillEqual() {
+            const total=Number(document.getElementById('bill-total').value)||0;
+            const people=Math.max(1,Number(document.getElementById('bill-people').value)||1);
+            const tip=Number(document.getElementById('bill-tip').value)||0;
+            const service=Number(document.getElementById('bill-service').value)||0;
+            const grand=total+tip+service;
+            lastBillTotal=grand;
+            const each=grand/people;
+            document.getElementById('bill-result').innerHTML=`
+                <div class="cv-big-result">${money(each)} / người</div>
+                <div class="cv-muted">Tổng bill: ${money(grand)} · ${people} người</div>
+                <table class="cv-table"><tr><th>Người</th><th>Số tiền</th></tr>
+                ${Array.from({length:people},(_,i)=>`<tr><td>Người ${i+1}</td><td>${money(each)}</td></tr>`).join('')}</table>`;
+            cvWrite(CV_KEYS.community,{...cvRead(CV_KEYS.community,{}), lastBill:grand});
+            saveGenericHistory('bill',grand);
+            checkAchievements();
+        }
+        function prepareBillQR() {
+            splitBillEqual();
+            document.getElementById('qr-area').style.display='block';
+            document.getElementById('qr-area').scrollIntoView({behavior:'smooth',block:'nearest'});
+        }
+        function generateVietQR() {
+            const bank=encodeURIComponent(document.getElementById('qr-bank').value.trim());
+            const account=encodeURIComponent(document.getElementById('qr-account').value.trim());
+            const name=encodeURIComponent(document.getElementById('qr-name').value.trim());
+            const note=encodeURIComponent(document.getElementById('qr-note').value.trim());
+            if(!bank||!account||!name||!lastBillTotal) {
+                document.getElementById('qr-output').innerHTML='<div class="cv-muted">Vui lòng nhập ngân hàng, số tài khoản, tên chủ tài khoản và bill.</div>';
+                return;
+            }
+            const url=`https://img.vietqr.io/image/${bank}-${account}-compact2.png?amount=${Math.round(lastBillTotal)}&addInfo=${note}&accountName=${name}`;
+            document.getElementById('qr-output').innerHTML=`
+                <img src="${url}" alt="VietQR" style="max-width:260px;width:100%;border-radius:12px;background:#fff;padding:8px" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <div class="cv-muted" style="display:none">Không tải được QR. Kiểm tra mã ngân hàng/số tài khoản.</div>
+                <p class="cv-muted" style="margin-top:8px">Số tiền: <b>${money(lastBillTotal)}</b></p>`;
+        }
+
+        /* --- WEATHER VIBE / OPEN-METEO --- */
+        async function loadWeather() {
+            const box=document.getElementById('weather-result');
+            box.innerHTML='<div class="cv-muted">⏳ Đang lấy vị trí và thời tiết...</div>';
+            if(!navigator.geolocation){
+                box.innerHTML='<div class="cv-muted">Trình duyệt không hỗ trợ định vị. Website vẫn hoạt động bình thường.</div>'; return;
+            }
+            navigator.geolocation.getCurrentPosition(async pos=>{
+                try {
+                    const {latitude,longitude}=pos.coords;
+                    const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,precipitation,rain,cloud_cover,wind_speed_10m&timezone=auto`);
+                    if(!res.ok) throw new Error('weather');
+                    const d=await res.json(), c=d.current;
+                    const vibe=weatherVibe(c.weather_code,c.rain,c.precipitation);
+                    box.innerHTML=`
+                        <div class="weather-card"><div class="weather-icon">${vibe.icon}</div>
+                        <div><b>${vibe.title}</b><div class="cv-muted">${Math.round(c.temperature_2m)}°C · Mưa: ${c.rain||0} mm · Gió: ${Math.round(c.wind_speed_10m)} km/h</div></div></div>
+                        <div class="cv-big-result" style="font-size:1.05rem">${vibe.plan}</div>
+                        <div class="cv-muted" style="margin-top:8px">${vibe.desc}</div>`;
+                } catch(e) {
+                    box.innerHTML='<div class="cv-muted">☁️ Không lấy được dữ liệu thời tiết lúc này. Bạn vẫn có thể dùng các tính năng khác của Chill Vibe.</div>';
+                }
+            },()=>{
+                box.innerHTML='<div class="cv-muted">📍 Bạn chưa cấp quyền vị trí. Có thể thử lại hoặc dùng các tính năng khác.</div>';
+            },{enableHighAccuracy:false,timeout:8000});
+        }
+        function weatherVibe(code,rain,precip) {
+            const wet=(rain||0)>0 || (precip||0)>0 || [51,53,55,61,63,65,71,73,75,80,81,82,95,96,99].includes(code);
+            if(wet) return {icon:'☔',title:'Vibe: CHILL TRONG NHÀ',plan:'🍜 Lẩu · Mì · Phở · ☕ Cafe · 🎮 Game · 🎤 Karaoke',desc:'Thời tiết ẩm/mưa phù hợp với món nóng và hoạt động trong nhà.'};
+            if(code<=2) return {icon:'☀️',title:'Vibe: RA NGOÀI THÔI!',plan:'🧋 Trà sữa · 🍦 Kem · 🚶 Đi dạo · 🌳 Hoạt động ngoài trời',desc:'Trời tương đối đẹp, phù hợp để nhóm ra ngoài và khám phá.'};
+            return {icon:'⛅',title:'Vibe: FLEX TÙY MOOD',plan:'☕ Cafe · 🍜 Ăn ngon · 🎮 Game · 🚶 Đi chill',desc:'Thời tiết trung tính — hãy để Mood Quiz quyết định phần còn lại.'};
+        }
+
+        /* --- MOOD QUIZ --- */
+        const quizQuestions=[
+            {q:'Hôm nay năng lượng của nhóm thế nào?',opts:[['😴 Mệt',1],['😌 Bình thường',2],['😎 Sung',3],['🤪 Quá năng lượng',4]]},
+            {q:'Nhóm muốn trải nghiệm kiểu nào?',opts:[['🤫 Yên tĩnh',1],['☕ Chill',2],['🎲 Vui vừa',3],['🔊 Quẩy',4]]},
+            {q:'Ngân sách hôm nay?',opts:[['💸 Tiết kiệm',1],['💰 Bình thường',2],['💎 Thoải mái',3],['👑 Không giới hạn',4]]}
+        ];
+        function renderMoodQuiz(){
+            const box=document.getElementById('mood-quiz');
+            box.innerHTML=quizQuestions.map((item,qi)=>`
+                <div style="text-align:left;margin-bottom:16px"><b>${qi+1}. ${item.q}</b>
+                ${item.opts.map((o,i)=>`<label class="quiz-option"><input type="radio" name="cvq${qi}" value="${o[1]}" ${i===1?'checked':''}>${o[0]}</label>`).join('')}</div>`).join('');
+        }
+        function calculateVibe(){
+            let total=0;
+            quizQuestions.forEach((_,i)=>{const x=document.querySelector(`input[name="cvq${i}"]:checked`); total+=Number(x?.value||2);});
+            const score=Math.round((total/12)*100);
+            let mood=score>=80?'🔥 QUÁ CHÁY':score>=60?'😎 ĐANG LÊN VIBE':score>=40?'😌 CHILL VỪA ĐỦ':'🫶 CẦN ĐƯỢC CHỮA LÀNH';
+            const result=document.getElementById('vibe-result');
+            result.style.display='block';
+            result.innerHTML=`<div class="cv-big-result">${score}%</div><b>${mood}</b><div class="vibe-meter"><span style="width:${score}%"></span></div><div class="cv-muted">Hãy ưu tiên lựa chọn trong tab Ăn Gì / Trò Chơi / Karaoke theo mức năng lượng này.</div>`;
+            cvWrite(CV_KEYS.vibe,{score,mood,timestamp:Date.now()});
+            cvWinSound();
+        }
+
+        /* --- ACHIEVEMENTS --- */
+        const achievementDefs=[
+            {id:'karaoke',icon:'🎤',name:'Thánh Ca Karaoke',desc:'Quay karaoke từ 5 lần trở lên.',test:h=>h.filter(x=>x.type==='karaoke').length>=5},
+            {id:'phuoc',icon:'🙏',name:'Thích Tích Phước',desc:'Quay món chay từ 2 lần trở lên.',test:h=>h.filter(x=>x.type==='food'&&x.isVeg).length>=2},
+            {id:'sang',icon:'🍗',name:'Dũng Sĩ Ăn Dặm',desc:'Có lịch sử hoạt động trong khung 08:00–11:00.',test:h=>h.some(x=>new Date(x.timestamp).getHours()>=8&&new Date(x.timestamp).getHours()<=11)},
+            {id:'tietkiem',icon:'💸',name:'Dân Chơi Hệ Thiếu Ngân Sách',desc:'Tổng giá trị món đã quay dưới 1.000.000đ và có ít nhất 3 món.',test:h=>{const f=h.filter(x=>x.type==='food');return f.length>=3&&f.reduce((s,x)=>s+(x.price||0),0)<1000000}},
+            {id:'caocap',icon:'👑',name:'Cậu Cả',desc:'Tổng giá trị món đã quay đạt từ 2.000.000đ.',test:h=>h.filter(x=>x.type==='food').reduce((s,x)=>s+(x.price||0),0)>=2000000},
+            {id:'late',icon:'🌙',name:'Khách Ruột Chợ Rẫy',desc:'Có hoạt động sau 23:00.',test:h=>h.some(x=>new Date(x.timestamp).getHours()>=23||new Date(x.timestamp).getHours()<4)},
+            {id:'spinmaster',icon:'⚡',name:'Tay Quay Sát Thủ',desc:'Có từ 10 lượt quay.',test:h=>h.length>=10}
+        ];
+        function getUnlocked(){return cvRead(CV_KEYS.achievements,[]);}
+        function checkAchievements(){
+            const history=getHistory();
+            const unlocked=getUnlocked();
+            let changed=false;
+            achievementDefs.forEach(a=>{
+                if(a.test(history)&&!unlocked.includes(a.id)){unlocked.push(a.id);changed=true;showAchievementPopup(a);}
+            });
+            if(changed) cvWrite(CV_KEYS.achievements,unlocked);
+            renderAchievements();
+        }
+        function renderAchievements(){
+            const box=document.getElementById('achievement-grid'); if(!box)return;
+            const unlocked=getUnlocked();
+            box.innerHTML=achievementDefs.map(a=>{
+                const ok=unlocked.includes(a.id);
+                return `<div class="achievement-card ${ok?'unlocked':'locked'}"><div class="achievement-icon">${a.icon}</div><div class="achievement-name">${ok?'🏆 ': '🔒 '}${a.name}</div><div class="achievement-desc">${a.desc}</div></div>`;
+            }).join('');
+        }
+        function showAchievementPopup(a){
+            document.getElementById('loot-rarity').textContent='ACHIEVEMENT UNLOCKED';
+            document.getElementById('loot-icon').textContent=a.icon;
+            document.getElementById('loot-title').textContent=a.name;
+            document.getElementById('loot-desc').textContent=a.desc;
+            document.getElementById('loot-popup').classList.add('active');
+            cvWinSound(); launchConfetti(80);
+        }
+        function closeLootPopup(e){
+            if(e && e.target!==e.currentTarget && !e.target.closest('.cv-btn')) return;
+            document.getElementById('loot-popup').classList.remove('active');
+        }
+
+        /* --- MEMORY CAPSULE --- */
+        function saveMemory(){
+            const m={
+                id:Date.now(), title:document.getElementById('memory-title').value.trim()||'Một buổi Chill',
+                date:document.getElementById('memory-date').value||new Date().toISOString().slice(0,10),
+                place:document.getElementById('memory-place').value.trim(),
+                members:document.getElementById('memory-members').value.trim(),
+                food:document.getElementById('memory-food').value.trim(),
+                song:document.getElementById('memory-song').value.trim(),
+                note:document.getElementById('memory-note').value.trim()
+            };
+            const arr=cvRead(CV_KEYS.memories,[]); arr.unshift(m); cvWrite(CV_KEYS.memories,arr); renderMemories(); renderMemoryCard(m);
+        }
+        function renderMemories(){
+            const box=document.getElementById('memory-list'); if(!box)return;
+            const arr=cvRead(CV_KEYS.memories,[]);
+            box.innerHTML=arr.map(m=>`<span class="cv-chip">📸 ${escapeHTML(m.title)} <button onclick="deleteMemory(${m.id})">×</button></span>`).join('') || '<span class="cv-muted">Chưa có kỷ niệm.</span>';
+        }
+        function deleteMemory(id){cvWrite(CV_KEYS.memories,cvRead(CV_KEYS.memories,[]).filter(x=>x.id!==id));renderMemories();}
+        function renderMemoryCard(memory){
+            const m=memory||{
+                title:document.getElementById('memory-title').value.trim()||'Một buổi Chill',
+                date:document.getElementById('memory-date').value||new Date().toISOString().slice(0,10),
+                place:document.getElementById('memory-place').value.trim(),
+                members:document.getElementById('memory-members').value.trim(),
+                food:document.getElementById('memory-food').value.trim(),
+                song:document.getElementById('memory-song').value.trim(),
+                note:document.getElementById('memory-note').value.trim()
+            };
+            const box=document.getElementById('memory-preview'); box.style.display='block';
+            box.innerHTML=`<h3>✨ CHILL VIBE MEMORY</h3><b>${escapeHTML(m.title)}</b><div class="cv-muted">📅 ${escapeHTML(m.date)} · 📍 ${escapeHTML(m.place||'Chưa nhập')}</div><p style="margin-top:10px">👥 ${escapeHTML(m.members||'Nhóm bạn')}<br>🍜 ${escapeHTML(m.food||'Chưa nhập món ăn')}<br>🎤 ${escapeHTML(m.song||'Chưa nhập bài hát')}</p><div style="margin-top:10px;font-style:italic">“${escapeHTML(m.note||'Một ngày chill đáng nhớ!')}”</div><button class="cv-btn cyan" style="margin-top:14px" onclick='downloadMemoryCard(${JSON.stringify(m).replace(/</g,"\\u003c")})'>⬇️ TẢI DIGITAL CARD</button>`;
+        }
+        function downloadMemoryCard(m){
+            const canvas=document.createElement('canvas'); canvas.width=1080; canvas.height=1350;
+            const ctx=canvas.getContext('2d');
+            const g=ctx.createLinearGradient(0,0,1080,1350); g.addColorStop(0,'#15102a'); g.addColorStop(1,'#32145f'); ctx.fillStyle=g; ctx.fillRect(0,0,1080,1350);
+            ctx.fillStyle='#00f2fe'; ctx.font='bold 64px Arial'; ctx.fillText('CHILL VIBE',70,120);
+            ctx.fillStyle='#ffffff'; ctx.font='bold 50px Arial'; wrapCanvas(ctx,m.title,70,230,900,65);
+            ctx.font='30px Arial'; ctx.fillStyle='#cbd5e1';
+            let y=410; [['📅',m.date],['📍',m.place||'Chưa nhập'],['👥',m.members||'Nhóm bạn'],['🍜',m.food||'Chưa nhập'],['🎤',m.song||'Chưa nhập']].forEach(r=>{ctx.fillText(r[0]+'  '+r[1],70,y);y+=70;});
+            ctx.fillStyle='#ff2a85'; ctx.font='italic 34px Arial'; wrapCanvas(ctx,'“'+(m.note||'Một ngày chill đáng nhớ!')+'”',70,820,900,50);
+            ctx.fillStyle='#94a3b8'; ctx.font='24px Arial'; ctx.fillText('Chọn đúng vibe – Chơi đúng nhóm – Chill đúng lúc.',70,1240);
+            const a=document.createElement('a'); a.download='chill-vibe-memory.png'; a.href=canvas.toDataURL('image/png'); a.click();
+        }
+        function wrapCanvas(ctx,text,x,y,maxWidth,lineHeight){
+            const words=String(text).split(' '); let line='';
+            for(const w of words){const test=line+w+' ';if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=w+' ';y+=lineHeight;}else line=test;}
+            ctx.fillText(line,x,y);
+        }
+
+        /* --- COMMUNITY --- */
+        function addCommunityItem(){
+            const name=document.getElementById('community-name').value.trim(); if(!name)return;
+            const cat=document.getElementById('community-category').value;
+            const arr=cvRead(CV_KEYS.community,[]); const found=arr.find(x=>x.name.toLowerCase()===name.toLowerCase()&&x.cat===cat);
+            if(found) found.likes++; else arr.push({name,cat,likes:1,spins:0});
+            cvWrite(CV_KEYS.community,arr); document.getElementById('community-name').value=''; renderCommunity();
+        }
+        function renderCommunity(){
+            const box=document.getElementById('community-ranking'); if(!box)return;
+            const arr=cvRead(CV_KEYS.community,[]);
+            arr.sort((a,b)=>(b.likes+b.spins)-(a.likes+a.spins));
+            box.innerHTML=arr.slice(0,10).map((x,i)=>`<div class="rank-item"><div class="rank-left"><span class="rank-number">#${i+1}</span><span>${catIcon(x.cat)} ${escapeHTML(x.name)}<div class="cv-muted">${x.spins||0} lần quay · ${x.likes||0} ❤️</div></span></div><button class="upgrade-mini-btn" onclick="likeCommunity('${encodeURIComponent(x.name)}','${x.cat}')">❤️</button></div>`).join('') || '<div class="cv-muted">Chưa có đề xuất.</div>';
+        }
+        function catIcon(c){return c==='food'?'🍜':c==='game'?'🎮':'🎤';}
+        function likeCommunity(encoded,cat){
+            const name=decodeURIComponent(encoded); const arr=cvRead(CV_KEYS.community,[]); const x=arr.find(a=>a.name===name&&a.cat===cat); if(x){x.likes=(x.likes||0)+1;cvWrite(CV_KEYS.community,arr);renderCommunity();}
+        }
+
+        /* --- HISTORY / INTEGRATION --- */
+        function saveGenericHistory(type,name){
+            try{
+                const history=getHistory();
+                history.unshift({type,name:String(name),price:0,isVeg:false,timestamp:Date.now(),timeString:new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})});
+                localStorage.setItem('chillvibe_history',JSON.stringify(history.slice(0,300)));
+                if(typeof renderHistoryAndTitles==='function') renderHistoryAndTitles();
+            }catch(e){}
+        }
+
+        const oldSpinCSGORoulette = window.spinCSGORoulette;
+        /* Override safely: the original roulette remains intact; this wrapper adds sound/achievement. */
+        window.spinCSGORoulette = function(type){
+            if(isSpinning[type]) return;
+            cvSpinSound();
+            oldSpinCSGORoulette(type);
+            setTimeout(()=>{ cvWinSound(); launchConfetti(35); checkAchievements(); },5700);
+        };
+
+        /* --- HOLIDAY THEME --- */
+        function getHoliday(){
+            const d=new Date(),m=d.getMonth()+1,day=d.getDate();
+            if(m===12) return {name:'🎄 NOEL',banner:'🎄 Chill Vibe đang ở chế độ NOEL · Chúc nhóm một mùa lễ thật chill!'};
+            if(m===10&&day>=20) return {name:'🎃 HALLOWEEN',banner:'🎃 Halloween Vibe · Mở hòm có thể gặp kết quả ma quái!'};
+            if(m===2&&day===14) return {name:'❤️ VALENTINE',banner:'❤️ Valentine Vibe · Chọn đúng món, đúng người, đúng mood!'};
+            if(m===8&&day===15) return {name:'🥮 TRUNG THU',banner:'🥮 Trung Thu Vibe · Cùng nhau ăn ngon và lưu kỷ niệm!'};
+            return null;
+        }
+        function applyHolidayTheme(){
+            const h=getHoliday(),banner=document.getElementById('holiday-banner');
+            if(!h||localStorage.getItem('chillvibe_holiday_off')==='true'){banner.style.display='none';return;}
+            banner.textContent=h.banner; banner.style.display='block';
+            if(h.name.includes('NOEL')) createSnow();
+        }
+        function createSnow(){
+            if(document.querySelector('.holiday-snow')) return;
+            for(let i=0;i<22;i++){const s=document.createElement('div');s.className='holiday-snow';s.textContent='❄';s.style.left=Math.random()*100+'vw';s.style.fontSize=(10+Math.random()*18)+'px';s.style.opacity=.25+Math.random()*.6;s.style.animationDuration=(5+Math.random()*7)+'s';s.style.animationDelay=(-Math.random()*8)+'s';document.body.appendChild(s);}
+        }
+        function toggleHolidayTheme(){
+            const off=localStorage.getItem('chillvibe_holiday_off')==='true';
+            localStorage.setItem('chillvibe_holiday_off',!off);
+            document.querySelectorAll('.holiday-snow').forEach(x=>x.remove());
+            applyHolidayTheme();
+        }
+
+        /* --- CONFETTI --- */
+        function launchConfetti(count=40){
+            const frag=document.createDocumentFragment();
+            for(let i=0;i<count;i++){
+                const el=document.createElement('span'); el.className='confetti-piece';
+                el.style.left=(10+Math.random()*80)+'vw'; el.style.setProperty('--dx',(Math.random()*400-200)+'px');
+                el.style.animationDelay=(Math.random()*.25)+'s'; el.style.transform=`rotate(${Math.random()*360}deg)`;
+                el.style.background=`hsl(${Math.random()*360},90%,65%)`;
+                frag.appendChild(el); setTimeout(()=>el.remove(),2200);
+            }
+            document.body.appendChild(frag);
+        }
+        function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+        function exportChillData(){
+            const payload={history:getHistory(),custom:getCustomData(),achievements:getUnlocked(),memories:cvRead(CV_KEYS.memories,[]),community:cvRead(CV_KEYS.community,[]),vibe:cvRead(CV_KEYS.vibe,null)};
+            const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+            const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='chillvibe-data.json';a.click();URL.revokeObjectURL(a.href);
+        }
+
+        /* --- INITIALIZE UPGRADE --- */
+        window.addEventListener('DOMContentLoaded',()=>{
+            document.getElementById('sound-toggle').textContent=cvSoundOn?'🔊':'🔇';
+            document.getElementById('custom-wheel-type').addEventListener('change',renderCustomWheel);
+            renderMoodQuiz(); renderCustomWheel(); renderAchievements(); renderMemories(); renderCommunity();
+            applyHolidayTheme(); checkAchievements();
+        });
+
+        // Community spin counter hook: observe newly rendered result without replacing old logic.
+        const cvOriginalDisplayResult = displayResult;
+        displayResult = function(type,item){
+            cvOriginalDisplayResult(type,item);
+            try{
+                const arr=cvRead(CV_KEYS.community,[]);
+                const name=item?.name;
+                if(name){
+                    const cat=type==='food'?'food':type==='game'?'game':'song';
+                    const x=arr.find(a=>a.name.toLowerCase()===name.toLowerCase()&&a.cat===cat);
+                    if(x) x.spins=(x.spins||0)+1;
+                    else arr.push({name,cat,likes:0,spins:1});
+                    cvWrite(CV_KEYS.community,arr);
+                    if(document.getElementById('community-ranking')) renderCommunity();
+                }
+            }catch(e){}
+        };
+
+    </script>
+</body>
+</html>
